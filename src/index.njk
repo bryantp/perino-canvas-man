@@ -1,0 +1,49 @@
+---
+layout: layouts/base.njk
+title: "Custom canvas, awnings & marine upholstery"
+eleventyComputed:
+  description: "{{ site.region }}'s leading provider of residential canvas awnings, marine canvas, and marine upholstery. A true custom shop in {{ site.contact.city }}, {{ site.contact.state_abbr }} since {{ site.founded_year }}."
+---
+
+<section class="home-hero">
+  <div class="container">
+    <h1>{{ site.region }}'s custom canvas shop since {{ site.founded_year }}.</h1>
+    <p class="lede">Looking for a professional patio awning manufacturer? Need custom marine or commercial canvas from an experienced craftsman? You've come to the right place.</p>
+    <div class="cta-row">
+      <a class="button" href="/residential/">See Our Work</a>
+      <a class="button button-outline" href="/contact/">Get a Quote</a>
+    </div>
+  </div>
+</section>
+
+<section class="page-body">
+  <div class="container">
+    <h2 style="text-align:center; margin-bottom:2rem;">What we do</h2>
+    <ul class="card-grid">
+      {% for area in gallery.areas %}
+        <li class="card">
+          <a href="/{{ area.slug }}/">
+            <div class="card-thumb">
+              {% if area.categories[0] and area.categories[0].thumb %}
+                {% responsiveImage area.categories[0].thumb, area.title, "(min-width: 800px) 33vw, 100vw" %}
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <h3>{{ area.title }}</h3>
+              <p class="count">{{ area.totalImages }} photos in {{ area.categories.length }} categories</p>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="page-body" style="background:#fff; border-top:1px solid var(--color-border);">
+  <div class="container prose" style="text-align:center; max-width:60ch; margin:0 auto;">
+    <h2>A true custom shop</h2>
+    <p>{{ site.name }} is a true custom shop and leading {{ site.region }} provider of residential, marine, and commercial canvas. Every cover, awning, and piece of upholstery we make is patterned on-site, sewn in our shop, and installed by us — never subcontracted. Quality craftsmanship, attention to detail, and a level of customer satisfaction that can't be beat.</p>
+    <p>We use only premium fabrics from{% for s in site.suppliers %}{% if loop.last and not loop.first %} and{% elif not loop.first %},{% endif %} <a href="{{ s.url }}">{{ s.name }}</a>{% endfor %}.</p>
+    <p><a class="button" href="/contact/">Talk to us about your project</a></p>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+layout: layouts/base.njk
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow"><a href="/{{ area }}/">{{ area | titleCase }}</a></p>
+    <h1>{{ title }}</h1>
+    {% if description %}<p class="lede">{{ description | safe }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="gallery-grid-section">
+  <div class="container">
+    {% if images.length %}
+      <ul class="gallery-grid">
+        {% for img in images %}
+          <li>
+            <a href="{{ img.src }}" class="gallery-item" data-lightbox="{{ category }}" data-caption="{{ img.alt }}">
+              {% responsiveImage img.src, img.alt, "(min-width: 1200px) 25vw, (min-width: 700px) 33vw, 50vw" %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No photos yet in this category.</p>
+    {% endif %}
+  </div>
+</section>

@@ -1,0 +1,20 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="brand">
+      <span class="brand-name">{{ site.name }}</span>
+      <span class="brand-tagline">{{ site.tagline }}</span>
+    </a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="primary-nav">
+      <span></span><span></span><span></span>
+    </button>
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <ul>
+        {% for item in site.nav %}
+          <li>
+            <a href="{{ item.url }}"{% if page.url == item.url or (item.url != '/' and page.url.startsWith(item.url)) %} aria-current="page"{% endif %}>{{ item.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,51 @@
+---
+layout: layouts/page.njk
+title: "Contact"
+subtitle: "Get in touch about your project — we'll handle the measurements and quote."
+permalink: "/contact/"
+---
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start;">
+  <div>
+    <h2>Visit or call</h2>
+    <p>
+      <strong>{{ site.name }}</strong><br>
+      {{ site.contact.address_line_1 }}<br>
+      {{ site.contact.address_line_2 }}
+    </p>
+    <p>
+      <strong>Phone:</strong> <a href="tel:{{ site.contact.phone_e164 }}">{{ site.contact.phone }}</a><br>
+      {% for e in site.contact.emails %}
+        <strong>{{ e.name }}:</strong> <a href="mailto:{{ e.address }}">{{ e.address }}</a>{% if not loop.last %}<br>{% endif %}
+      {% endfor %}
+    </p>
+
+    <h2>Hours</h2>
+    <ul class="hours" style="list-style:none; padding:0;">
+      {% for h in site.hours %}
+        <li style="display:flex; justify-content:space-between; padding:0.4rem 0; border-bottom:1px solid var(--color-border); max-width:320px;">
+          <span><strong>{{ h.label }}</strong></span>
+          <span>{{ h.hours }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+    {% for h in site.hours %}{% if h.note %}<p style="font-style:italic; color:var(--color-stone); margin-top:0.5rem; max-width:320px;">{{ h.note }}</p>{% endif %}{% endfor %}
+  </div>
+
+  <div>
+    <h2>Send a message</h2>
+    <p>For the fastest response, give us a call or send an email. We'll come out, measure, and provide a quote at no charge.</p>
+    <p style="margin-top:2rem; display:flex; flex-wrap:wrap; gap:0.75rem;">
+      {% for e in site.contact.emails %}
+        <a class="button" href="mailto:{{ e.address }}?subject=Project%20inquiry">Email {{ e.name }}</a>
+      {% endfor %}
+      <a class="button button-outline" style="color:var(--color-navy); border-color:var(--color-navy);" href="tel:{{ site.contact.phone_e164 }}">Call {{ site.contact.phone }}</a>
+    </p>
+  </div>
+</div>
+
+<style>
+@media (max-width: 700px) {
+  .page-body > .container > div { grid-template-columns: 1fr !important; }
+}
+</style>

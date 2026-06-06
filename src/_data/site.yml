@@ -1,0 +1,65 @@
+# =============================================================================
+# Single source of truth for site-wide editable info.
+# Change anything here and rebuild — values flow through every page.
+# =============================================================================
+
+name: "Perino's Canvas & Awnings"
+tagline: "Long Island's leading provider of residential canvas awnings, marine canvas, and marine upholstery."
+url: "https://www.canvasman.com"
+founded_year: 1972
+region: "Long Island"
+
+contact:
+  address_line_1: "154 W Main Street"
+  address_line_2: "Bay Shore, NY 11706"
+  city: "Bay Shore"
+  state: "New York"
+  state_abbr: "NY"
+  phone: "(631) 581-5168"
+  phone_e164: "+16315815168"
+  emails:
+    - name: "Tom"
+      address: "tom@canvasman.com"
+    - name: "Dean"
+      address: "dean@canvasman.com"
+
+# Each entry: label, hours (or "Closed"), optional note for seasonal exceptions.
+hours:
+  - label: "Monday – Friday"
+    hours: "8:00 AM – 4:00 PM"
+  - label: "Saturday"
+    hours: "8:00 AM – 12:00 PM"
+    note: "Closed Saturdays Jan/Feb"
+  - label: "Sunday"
+    hours: "Closed"
+
+# Primary navigation. Drop a new entry here to add a top-level link.
+nav:
+  - label: "Home"
+    url: "/"
+  - label: "Residential"
+    url: "/residential/"
+  - label: "Commercial"
+    url: "/commercial/"
+  - label: "Marine"
+    url: "/marine/"
+  - label: "Canvas Services"
+    url: "/canvas-services/"
+  - label: "FAQ"
+    url: "/faq/"
+  - label: "About"
+    url: "/about/"
+  - label: "Contact"
+    url: "/contact/"
+
+# Material partners (shown on About page and in footer).
+suppliers:
+  - name: "Sunbrella"
+    logo: "/images/content/sunbrella-logo.png"
+    url: "https://www.sunbrella.com"
+  - name: "Naugahyde"
+    logo: "/images/content/naugahyde-logo.png"
+    url: "https://www.naugahyde.com"
+  - name: "Strataglass"
+    logo: "/images/content/strataglass-logo.png"
+    url: "https://www.strataglass.com"

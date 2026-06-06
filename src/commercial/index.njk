@@ -1,0 +1,37 @@
+---
+layout: layouts/base.njk
+title: "Commercial"
+description: "Storefront, restaurant, and industrial canvas work."
+permalink: "/commercial/"
+---
+
+{% set area = gallery.areasBySlug.commercial %}
+
+<section class="page-hero">
+  <div class="container">
+    <h1>{{ area.title }}</h1>
+    <p class="lede">{{ area.subtitle }}</p>
+  </div>
+</section>
+
+<section class="page-body">
+  <div class="container">
+    <ul class="card-grid">
+      {% for cat in area.categories %}
+        <li class="card">
+          <a href="{{ cat.permalink }}">
+            <div class="card-thumb">
+              {% if cat.thumb %}
+                {% responsiveImage cat.thumb, cat.title, "(min-width: 1000px) 33vw, (min-width: 600px) 50vw, 100vw" %}
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <h3>{{ cat.title }}</h3>
+              <p class="count">{{ cat.imageCount }} photo{% if cat.imageCount != 1 %}s{% endif %}</p>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

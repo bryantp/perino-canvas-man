@@ -1,0 +1,12 @@
+node_modules/
+_site/
+build/
+.DS_Store
+*.log
+
+# Claude Code session-local settings
+.claude/
+
+# Original Joomla site files — large, kept locally as reference only
+site_files/joomla_files.tar.gz
+site_files/joomla_db.sql

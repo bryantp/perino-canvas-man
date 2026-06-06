@@ -1,0 +1,36 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: gallery.categories
+  size: 1
+  alias: cat
+permalink: "/{{ cat.area }}/{{ cat.slug }}/"
+eleventyComputed:
+  title: "{{ cat.title }}"
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow"><a href="/{{ cat.area }}/">{{ cat.areaTitle }}</a></p>
+    <h1>{{ cat.title }}</h1>
+    {% if cat.description %}<div class="lede">{{ cat.description | safe }}</div>{% endif %}
+  </div>
+</section>
+
+<section class="gallery-grid-section">
+  <div class="container">
+    {% if cat.images.length %}
+      <ul class="gallery-grid">
+        {% for img in cat.images %}
+          <li>
+            <a href="{{ img.src }}" class="gallery-item" data-lightbox="{{ cat.slug }}" data-caption="{{ img.alt }}">
+              {% responsiveImage img.src, img.alt, "(min-width: 1200px) 25vw, (min-width: 700px) 33vw, 50vw" %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No photos yet in this category.</p>
+    {% endif %}
+  </div>
+</section>

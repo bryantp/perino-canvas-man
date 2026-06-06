@@ -1,0 +1,19 @@
+---
+layout: layouts/page.njk
+title: "Frequently Asked Questions"
+subtitle: "Care, materials, and answers to the things we get asked most."
+permalink: "/faq/"
+---
+
+<p>Have a question that isn't covered here? <a href="/contact/">Get in touch</a> — we're happy to help.</p>
+
+<div class="faq-list">
+  {% for entry in faq.entries %}
+    <details class="faq-item">
+      <summary>{{ entry.q }}</summary>
+      <div class="faq-answer">
+        {{ entry.a_html | safe }}
+      </div>
+    </details>
+  {% endfor %}
+</div>
