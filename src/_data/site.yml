@@ -33,16 +33,21 @@ hours:
   - label: "Sunday"
     hours: "Closed"
 
-# Primary navigation. Drop a new entry here to add a top-level link.
+# Primary navigation. Each entry is either:
+#   - a leaf link (has `url`)
+#   - a dropdown group (has `children` — array of leaf links). The label is the
+#     group name shown in the header; clicking it toggles the dropdown.
 nav:
   - label: "Home"
     url: "/"
-  - label: "Residential"
-    url: "/residential/"
-  - label: "Commercial"
-    url: "/commercial/"
-  - label: "Marine"
-    url: "/marine/"
+  - label: "Galleries"
+    children:
+      - label: "Residential"
+        url: "/residential/"
+      - label: "Commercial"
+        url: "/commercial/"
+      - label: "Marine"
+        url: "/marine/"
   - label: "Canvas Services"
     url: "/canvas-services/"
   - label: "FAQ"

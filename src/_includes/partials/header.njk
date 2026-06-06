@@ -9,11 +9,32 @@
     </button>
     <nav id="primary-nav" class="primary-nav" aria-label="Primary">
       <ul>
-        {% for item in site.nav %}
-          <li>
-            <a href="{{ item.url }}"{% if page.url == item.url or (item.url != '/' and page.url.startsWith(item.url)) %} aria-current="page"{% endif %}>{{ item.label }}</a>
-          </li>
-        {% endfor %}
+        {%- for item in site.nav %}
+          {%- if item.children %}
+            {%- set anyChildActive = false %}
+            {%- for child in item.children %}
+              {%- if page.url == child.url or (child.url != '/' and page.url.startsWith(child.url)) %}
+                {%- set anyChildActive = true %}
+              {%- endif %}
+            {%- endfor %}
+            <li class="has-dropdown{% if anyChildActive %} dropdown-active{% endif %}">
+              <details class="nav-dropdown">
+                <summary>{{ item.label }}<span class="caret" aria-hidden="true"></span></summary>
+                <ul class="dropdown">
+                  {%- for child in item.children %}
+                    <li>
+                      <a href="{{ child.url }}"{% if page.url == child.url or (child.url != '/' and page.url.startsWith(child.url)) %} aria-current="page"{% endif %}>{{ child.label }}</a>
+                    </li>
+                  {%- endfor %}
+                </ul>
+              </details>
+            </li>
+          {%- else %}
+            <li>
+              <a href="{{ item.url }}"{% if page.url == item.url or (item.url != '/' and page.url.startsWith(item.url)) %} aria-current="page"{% endif %}>{{ item.label }}</a>
+            </li>
+          {%- endif %}
+        {%- endfor %}
       </ul>
     </nav>
   </div>

@@ -153,26 +153,10 @@ Deferred curation passes — do these before publishing.
 - [x] **Canvas Services page** — ported from `canvasman.com/canvas-services.html`. Four sections: intro, Marine Canvas Repairs, Canvas Awning Repairs, Canvas Awning Service. Legacy anchors (`#marine-canvas-repairs`, `#marine-awning-repairs`, `#canvas-awning-services`) preserved so deep links from the old site still work. The intro CTA was rewritten to pull the phone number from `site.yml` (replacing the outdated "Give Mike or Tom" text).
 - [ ] **Q1 FAQ wording** — answer says "from Canvas Man" verbatim (matches live source). Decide whether to keep "Canvas Man" as a brand reference or substitute the formal name "Perino's Canvas & Awnings". Easy `sed` either way.
 
-## Open questions
+## Deployment
 
-These were deferred during planning. They don't block the initial build but should be answered before publishing.
-
-2. **Visual design reference** — The original Joomla site uses the default `rhuk_milkyway` template (~15 years old). Going with a clean modern design rather than mirroring the old look. Confirm this preference, or share a reference site you want to emulate.
-
-3. **Business info accuracy** — Pulled from the Joomla DB (`jos_contact_details`):
-   - Name: Perino's CanvasMan
-   - Address: 154 W. Main St., Bay Shore, NY 11706
-   - Phone: (631) 581-5168
-   - Fax: (631) 581-3291
-   - Email: thomas@canvasman.com
-
-   Confirm these are current, or provide updates. Also need: **opening hours** (not in DB).
-
-4. **Contact form** — The Joomla site had a contact form via `jos_contact_details`. A static site can't process forms by itself. Options:
-   - Plain `mailto:` link (simplest, no JS)
-   - Third-party form handler (Formspree, Basin, Netlify Forms) — needs a free account
-   - No form, just phone + email + address shown
-
-5. **Domain & deployment** — Where will the new site live? Replacing canvasman.com directly, a staging subdomain first, or somewhere else? Affects only the deploy step.
-
-6. **SEO & redirects** — The old site has 7,000+ entries in `jos_sh404sef_aliases` (URL rewrites). If we replace canvasman.com directly, we may want to set up 301 redirects from common old URLs to new ones to preserve search ranking. Out of scope for v1 but worth noting.
+- [x] **Preview hosting** — site is built and deployed by `.github/workflows/deploy.yml` on every push to `main`. Custom domain `preview.canvasman.com` is wired via a CNAME record at the registrar and the `src/CNAME` file in the repo.
+- [x] **Business info confirmed** — name, address, phone, emails, hours all confirmed against the live site and stored in `src/_data/site.yml`. Tagline and copy adapted from the live canvasman.com.
+- [ ] **Production cutover plan** — when ready to replace canvasman.com itself, decisions needed: keep GitHub Pages or move to Cloudflare Pages / Netlify, what's the cutover window, do we keep the legacy server running in parallel for a grace period?
+- [ ] **Contact form** — currently mailto-only. Decide whether to add a real form (Formspree, Basin, etc. — needs free account + tiny JS) or stay with mailto + tel.
+- [ ] **SEO & 301 redirects** — old Joomla site has ~7,000 URL aliases in `jos_sh404sef_aliases`. If/when canvasman.com is replaced, we should preserve the most-trafficked old URLs with 301s to the new equivalents. Probably only the top 20–50 URLs matter; the rest can `410 Gone`.

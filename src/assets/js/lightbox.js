@@ -9,6 +9,26 @@
     });
   }
 
+  // Dropdown menus: close on outside click and on Escape.
+  // The <details> element handles open/close on summary click natively.
+  const dropdowns = Array.from(document.querySelectorAll(".nav-dropdown"));
+  if (dropdowns.length) {
+    document.addEventListener("click", (e) => {
+      for (const d of dropdowns) {
+        if (d.open && !d.contains(e.target)) d.open = false;
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      for (const d of dropdowns) {
+        if (d.open) {
+          d.open = false;
+          d.querySelector("summary")?.focus();
+        }
+      }
+    });
+  }
+
   // Lightbox
   const items = Array.from(document.querySelectorAll("[data-lightbox]"));
   if (!items.length) return;
