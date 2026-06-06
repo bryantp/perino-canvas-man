@@ -160,3 +160,4 @@ Deferred curation passes — do these before publishing.
 - [ ] **Production cutover plan** — when ready to replace canvasman.com itself, decisions needed: keep GitHub Pages or move to Cloudflare Pages / Netlify, what's the cutover window, do we keep the legacy server running in parallel for a grace period?
 - [ ] **Contact form** — currently mailto-only. Decide whether to add a real form (Formspree, Basin, etc. — needs free account + tiny JS) or stay with mailto + tel.
 - [ ] **SEO & 301 redirects** — old Joomla site has ~7,000 URL aliases in `jos_sh404sef_aliases`. If/when canvasman.com is replaced, we should preserve the most-trafficked old URLs with 301s to the new equivalents. Probably only the top 20–50 URLs matter; the rest can `410 Gone`.
+- [ ] Upgrade site to SSL
