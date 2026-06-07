@@ -150,5 +150,14 @@ Deferred curation passes — do these before publishing.
 - [x] **Production hosting choice** — staying on GitHub Pages. Free, sufficient for the bandwidth this site will see, and the existing deploy / preview / TLS setup already works. Revisit if (a) bandwidth approaches the 100 GB/mo soft cap, (b) we need server-side form handling or edge functions, or (c) the contact form (item below) pushes us toward Netlify for its built-in forms.
 - [ ] **Cutover window & parallel-run plan** — when we're ready to replace canvasman.com itself, decide the cutover window and whether to keep the legacy Joomla server running in parallel for a grace period (recommend: yes, ~30 days, so any missed redirects can be observed and patched).
 - [ ] **Contact form** — currently mailto-only. Decide whether to add a real form (Formspree, Basin, etc. — needs free account + tiny JS) or stay with mailto + tel.
-- [ ] **SEO & 301 redirects** — old Joomla site has ~7,000 URL aliases in `jos_sh404sef_aliases`. If/when canvasman.com is replaced, we should preserve the most-trafficked old URLs with 301s to the new equivalents. Probably only the top 20–50 URLs matter; the rest can `410 Gone`.
+- [ ] **SEO & 301 redirects** — old Joomla site has ~7,000 URL aliases in `jos_sh404sef_aliases`. If/when canvasman.com is replaced, we should preserve the most-trafficked old URLs with 301s to the new equivalents. Probably only the top 20–50 URLs matter; the rest can `410 Gone`. **Data gathered 2026-06-07** from 10 days of server access logs at `build/top-urls.txt` and `build/top-urls-human.txt` (both gitignored). Known-important mappings already identified:
+  - `/`, `/index.php` → `/`
+  - `/canvas-services`, `/canvas-services.html` → `/canvas-services/`
+  - `/marine.html` → `/marine/`, `/residential.html` → `/residential/`, `/commercial.html` → `/commercial/`, `/faq.html` → `/faq/`
+  - `/contact-us.html` → `/contact/`
+  - `/<N>-<slug>.html` (FW Gallery category pages) → `/{area}/{category}/` — mappable via `build/gallery_mapping.json` + the `PROJECT_TO_CATEGORY` dict from initial extraction
+  - `/image/<N>-<slug>.html` (individual photo pages) → parent category page, mappable via the FW Gallery DB
+  - **`/testimonials/` → `/about/#testimonials`** (testimonials content now lives in a section on the About page rather than its own page)
+  - `/feed/atom.html` → `410 Gone` (RSS feed, low-value)
+  - Sitemap URLs → ensure new site emits `/sitemap.xml`
 - [x] **HTTPS / SSL on preview.canvasman.com** — Let's Encrypt certificate auto-provisioned by GitHub Pages once the CNAME record resolved. "Enforce HTTPS" enabled in repo Settings → Pages so HTTP requests redirect to HTTPS.
