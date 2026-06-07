@@ -1,0 +1,74 @@
+---
+layout: layouts/base.njk
+title: "Similar-image review"
+permalink: "/review/similar/"
+eleventyExcludeFromCollections: true
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow"><a href="/review/">Back to all categories</a></p>
+    <h1>Similar-image review</h1>
+    {% if similar.generated %}
+      <p class="lede">
+        Found <strong>{{ similar.groups.length }}</strong> group{% if similar.groups.length != 1 %}s{% endif %}
+        of perceptually-similar images across {{ similar.total_images }} total photos
+        (threshold: {{ similar.threshold }}, {{ similar.pairs_found }} similar pairs).
+        Click a photo to mark it for cut. Use the bottom bar to export + apply cuts.
+      </p>
+      <p style="color:var(--color-stone); font-size:0.9rem;">Generated {{ similar.generated }}</p>
+    {% else %}
+      <p class="lede">No similarity data yet. Run <code>npm run find-similar</code> to generate it, then refresh this page.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% if similar.groups.length %}
+<section class="page-body">
+  <div class="container">
+    {% for group in similar.groups %}
+      <div class="similar-group{% if group.cross_category %} similar-group--cross{% endif %}" id="{{ group.id }}">
+        <div class="similar-group-header">
+          <h2>
+            {{ group.id | replace("group-", "Group ") }}
+            <span class="similar-group-meta">
+              {{ group.images.length }} image{% if group.images.length != 1 %}s{% endif %}
+              · distance ≤ {{ group.max_distance }}
+              {% if group.cross_category %}<span class="badge-cross">cross-category</span>{% endif %}
+              {% if group.sequence_pattern %}<span class="badge-sequence">sequence pattern</span>{% endif %}
+              {% if group.max_distance == 0 %}<span class="badge-identical">byte-identical</span>{% endif %}
+            </span>
+          </h2>
+          {% if group.sequence_pattern %}
+            <p class="similar-group-hint">Filenames differ only by a numeric suffix (e.g. <code>name.jpg</code>, <code>name-2.jpg</code>, <code>name-3.jpg</code>) — classic import-time variant pattern. Almost always safe to keep one and cut the rest.</p>
+          {% elif group.cross_category %}
+            <p class="similar-group-hint">Cross-category groups may be intentional — the same photo can legitimately illustrate two categories. Decide based on what each category needs.</p>
+          {% elif group.max_distance == 0 %}
+            <p class="similar-group-hint">These images have identical perceptual hashes (likely byte-identical too). Keeping one and cutting the rest is usually the right call.</p>
+          {% endif %}
+        </div>
+        <ul class="similar-row">
+          {% for img in group.images %}
+            <li>
+              <button
+                type="button"
+                class="review-item{% if img.largest %} review-item--largest{% endif %}"
+                data-photo-path="{{ img.path }}"
+                data-area="{{ img.area }}"
+                data-category="{{ img.category }}"
+                data-filename="{{ img.file }}"
+                aria-pressed="false"
+              >
+                {% responsiveImage "/" + img.path | replace("src/", ""), img.file, "(min-width: 1200px) 25vw, (min-width: 700px) 33vw, 50vw" %}
+                <span class="cut-badge" aria-hidden="true">✕ cut</span>
+                {% if img.largest %}<span class="largest-badge" aria-hidden="true">★ largest</span>{% endif %}
+                <span class="review-filename" aria-hidden="true">{{ img.area }}/{{ img.category }}/{{ img.file }} · {{ (img.size / 1024) | round(1) }}KB</span>
+              </button>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
