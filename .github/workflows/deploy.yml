@@ -3,15 +3,18 @@ name: Build and deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  pull-requests: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -22,6 +25,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      report: ${{ steps.report.outputs.report }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,13 +43,76 @@ jobs:
       - name: Build site
         run: npm run build
 
+      - name: Generate build report
+        id: report
+        run: |
+          set -euo pipefail
+
+          pages=$(find _site -name 'index.html' | wc -l | tr -d ' ')
+          photos=$(find src/images/gallery -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) | wc -l | tr -d ' ')
+          variants=$(find _site/img -type f 2>/dev/null | wc -l | tr -d ' ')
+          size=$(du -sh _site | awk '{print $1}')
+
+          # Extract empty-category list from the auto-generated report.
+          # The data layer writes to archive/EMPTY_CATEGORIES.md on every build.
+          empty_count=0
+          empty_lines=""
+          if [ -f archive/EMPTY_CATEGORIES.md ]; then
+            empty_count=$(grep -c '^| `src/images/gallery/' archive/EMPTY_CATEGORIES.md || true)
+            empty_lines=$(grep '^| `src/images/gallery/' archive/EMPTY_CATEGORIES.md || true)
+          fi
+
+          {
+            echo "### 🏗️ Build report"
+            echo ""
+            echo "| Metric | Value |"
+            echo "|---|---|"
+            echo "| Pages | $pages |"
+            echo "| Gallery photos (source) | $photos |"
+            echo "| Image variants generated | $variants |"
+            echo "| Output size | $size |"
+            echo ""
+            if [ "$empty_count" -gt 0 ]; then
+              echo "> ⚠️ **$empty_count empty category** in \`src/images/gallery/\`. Skipped from the site so no broken pages appear."
+              echo ""
+              echo "$empty_lines"
+              echo ""
+              echo "See [\`archive/EMPTY_CATEGORIES.md\`](archive/EMPTY_CATEGORIES.md) for details and recovery steps."
+            else
+              echo "> ✅ No empty gallery categories."
+            fi
+          } > /tmp/report.md
+
+          # Job summary — visible on every workflow run.
+          cat /tmp/report.md >> "$GITHUB_STEP_SUMMARY"
+
+          # Stash the report so the PR-comment job can read it.
+          {
+            echo 'report<<REPORT_EOF'
+            cat /tmp/report.md
+            echo 'REPORT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
+  comment:
+    needs: build
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post / update sticky PR comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: build-report
+          message: ${{ needs.build.outputs.report }}
+
   deploy:
     needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

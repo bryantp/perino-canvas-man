@@ -126,14 +126,7 @@ Deferred curation passes — do these before publishing.
 
 ## Design / UX backlog
 
-- [ ] **Top-bar nav has too many items and wraps awkwardly** — with Home / Residential / Commercial / Marine / Canvas Services / FAQ / About / Contact, "Canvas Services" breaks across two lines on desktop because the right-aligned nav runs out of room. Plus, eight top-level links is a lot of cognitive load. Options to evaluate:
-  - **Consolidate** — drop About into a footer link or merge Canvas Services into Residential/Marine area pages.
-  - **Shorter labels** — "Canvas Services" → "Services"; "Frequently Asked Questions" → "FAQ" (already shorter).
-  - **Two-row header** — primary nav on one row, secondary (About, FAQ, Contact) on a second.
-  - **Hamburger sooner** — switch to the mobile menu at a wider breakpoint (e.g. < 1100px instead of < 800px) so the nav collapses before it wraps.
-  - **`nowrap` on link labels** — prevents multi-word labels like "Canvas Services" from breaking mid-label; doesn't fix the total-width problem but stops the worst visual artifact.
-
-  Defer until after the live site cutover so we don't churn the structure while validating content.
+- [x] **Top-bar nav wrap** — fixed by grouping the gallery areas (Residential, Commercial, Marine) under a "Galleries" dropdown. Reduced top-level items from 8 to 6, no labels wrap. Built on native `<details>`/`<summary>` with a small click-outside / Escape JS handler. Mobile collapses cleanly into the existing hamburger menu as an inline accordion. `white-space: nowrap` applied to all nav labels as a defensive fix.
 
 ## Tooling / DX backlog
 
