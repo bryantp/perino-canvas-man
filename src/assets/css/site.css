@@ -455,7 +455,8 @@ p { margin: 0 0 1em; }
   color: var(--color-stone);
 }
 .similar-group-meta .badge-cross,
-.similar-group-meta .badge-identical {
+.similar-group-meta .badge-identical,
+.similar-group-meta .badge-sequence {
   display: inline-block;
   padding: 0.1rem 0.5rem;
   font-size: 0.75rem;
@@ -471,6 +472,29 @@ p { margin: 0 0 1em; }
   background: rgba(192, 57, 43, 0.15);
   color: #a93226;
 }
+.similar-group-meta .badge-sequence {
+  background: rgba(80, 110, 170, 0.15);
+  color: #2e4d8c;
+}
+
+/* Per-image "largest" hint inside .review-item, only on the similar page. */
+.review-item--largest {
+  border-color: #1e8449;
+}
+.review-item--largest .largest-badge {
+  position: absolute;
+  top: 0.5rem; left: 0.5rem;
+  background: #1e8449;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  pointer-events: none;
+  letter-spacing: 0.02em;
+}
+/* When marked cut, the cut indication takes precedence — hide the largest pip. */
+.review-item.cut .largest-badge { opacity: 0; }
 .similar-group-hint {
   font-size: 0.85rem;
   color: var(--color-stone);

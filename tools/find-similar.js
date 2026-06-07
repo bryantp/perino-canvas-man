@@ -144,7 +144,18 @@ async function main() {
   // Largest groups first (most actionable).
   groups.sort((a, b) => b.length - a.length);
 
+  // Detect whether all filenames in a group differ only by an optional `-\d+`
+  // suffix (e.g. `foo.jpg`, `foo-1.jpg`, `foo-2.jpg` → stem `foo`).
+  // Catches the pool-cabana / `name-N.jpg` import pattern explicitly.
+  function isSequencePattern(files) {
+    const stems = files.map((f) =>
+      f.replace(/(-\d+)?(\.[A-Za-z0-9]+)$/, "$2").replace(/\.[A-Za-z0-9]+$/, ""),
+    );
+    return new Set(stems).size === 1 && stems[0].length > 0;
+  }
+
   let crossCategoryGroups = 0;
+  let sequencePatternGroups = 0;
   const out = {
     generated: new Date().toISOString(),
     threshold,
@@ -161,13 +172,29 @@ async function main() {
           size: fs.statSync(path.join(ROOT, hashes[i].path)).size,
         };
       });
+
+      // Mark the largest file(s) in the group. Skip marking when every file is
+      // the same size — the badge would be on everyone, which carries no signal
+      // (and the byte-identical badge already covers that case).
+      const sizes = images.map((im) => im.size);
+      const maxSize = Math.max(...sizes);
+      const minSize = Math.min(...sizes);
+      if (maxSize > minSize) {
+        for (const im of images) im.largest = im.size === maxSize;
+      }
+
       const cats = new Set(images.map((im) => `${im.area}/${im.category}`));
       const crossCategory = cats.size > 1;
       if (crossCategory) crossCategoryGroups++;
+
+      const sequencePattern = isSequencePattern(images.map((im) => im.file));
+      if (sequencePattern) sequencePatternGroups++;
+
       return {
         id: `group-${gi + 1}`,
         max_distance: maxDistance(indices),
         cross_category: crossCategory,
+        sequence_pattern: sequencePattern,
         images,
       };
     }),
@@ -177,7 +204,7 @@ async function main() {
   fs.writeFileSync(OUTPUT, JSON.stringify(out, null, 2));
   const involved = out.groups.reduce((n, g) => n + g.images.length, 0);
   console.log(
-    `find-similar: ${out.groups.length} group(s), ${involved} image(s) involved, ${crossCategoryGroups} cross-category.`,
+    `find-similar: ${out.groups.length} group(s), ${involved} image(s) involved, ${crossCategoryGroups} cross-category, ${sequencePatternGroups} sequence-pattern.`,
   );
   console.log(`find-similar: wrote ${path.relative(process.cwd(), OUTPUT)}`);
   console.log("");
