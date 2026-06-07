@@ -17,6 +17,15 @@ eleventyExcludeFromCollections: true
 
 <section class="page-body">
   <div class="container">
+    <h2>Tools</h2>
+    <ul style="list-style:none; padding:0; margin:0 0 2rem;">
+      <li style="background:#fff; border:1px solid var(--color-border); border-radius:var(--radius); padding:1rem 1.25rem; margin-bottom:0.75rem;">
+        <strong><a href="/review/similar/">Similar-image review</a></strong> &mdash;
+        groups of perceptually-similar photos found across the gallery.
+        Generate with <code>npm run find-similar</code>; refresh this page after.
+      </li>
+    </ul>
+
     <h2>Categories</h2>
     <ul class="card-grid">
       {% for cat in gallery.categories %}

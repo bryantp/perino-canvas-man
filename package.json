@@ -7,12 +7,14 @@
     "build": "eleventy",
     "serve": "eleventy --serve",
     "review": "REVIEW_MODE=1 eleventy --serve --port 8081",
+    "find-similar": "node tools/find-similar.js",
     "apply-cuts": "node tools/apply-cuts.js",
     "clean": "rm -rf _site"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
     "@11ty/eleventy-img": "^5.0.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "sharp-phash": "^2.2.0"
   }
 }

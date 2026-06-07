@@ -56,18 +56,34 @@ src/
 
 ## Curating gallery photos
 
-To weed out weak or duplicate photos:
+Two complementary tools, both gated by `REVIEW_MODE=1` so they never ship to production:
+
+**1. Find perceptually-similar groups (automated):**
 
 ```sh
-npm run review                    # opens dev server at http://localhost:8081/review/
-# click any photo to mark it for "cut" (selections persist across pages)
-# when done, click "Export cuts.json" at the bottom
+npm run find-similar               # default threshold 8
+# or: npm run find-similar -- --threshold 6   (stricter, fewer groups)
+npm run review                     # boots http://localhost:8081/
+# visit /review/similar/ to see the groups, click photos to mark cut
+```
+
+`find-similar` computes a 64-bit perceptual hash (sharp-phash) for every gallery photo, groups images whose pairwise Hamming distance is at most the threshold, and writes `build/similar-groups.json`. The `/review/similar/` page renders each group side-by-side; cross-category groups (same photo legitimately in two categories) and byte-identical groups (`max_distance = 0`) are surfaced with badges so they're easy to skip vs. cut.
+
+**2. Manual contact-sheet review (per-category):**
+
+```sh
+npm run review                     # http://localhost:8081/review/
+# click any photo in a category to mark for cut (selections persist across pages)
+```
+
+**Apply the cuts** (works the same for both tools):
+
+```sh
+# in the review UI, click "Export cuts.json" at the bottom
 npm run apply-cuts -- ~/Downloads/cuts.json
 ```
 
-`apply-cuts` moves the marked files from `src/images/gallery/<area>/<cat>/` to `archive/manual-curated/<area>/<cat>/`, never deletes them, and appends a dated entry to `archive/ARCHIVE_LOG.md`. To restore one, `mv` it back into `src/images/gallery/`.
-
-The `/review/` pages only exist when you run `npm run review` (gated by the `REVIEW_MODE` env var) — they're not shipped to production.
+`apply-cuts` moves the marked files from `src/images/gallery/<area>/<cat>/` to `archive/manual-curated/<area>/<cat>/`, never deletes them, and appends a dated entry to `archive/ARCHIVE_LOG.md`. To restore one, `mv` it back into `src/images/gallery/` and rebuild.
 
 ## Operations
 
