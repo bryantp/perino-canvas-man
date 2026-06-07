@@ -130,13 +130,9 @@ Deferred curation passes — do these before publishing.
 
 ## Tooling / DX backlog
 
-- [ ] **Surface the empty-category report during build** — right now `archive/EMPTY_CATEGORIES.md` is regenerated silently on every build. Hook it into the build flow so empty categories show up where they'll actually be seen. Options to evaluate:
-  - **Console warning at build end.** Wrap `npm run build` with a script (or use Eleventy's `eleventy.after` event) that prints `⚠️ 1 empty category — see archive/EMPTY_CATEGORIES.md` after the build summary. Lowest-friction.
-  - **Eleventy `--quiet` summary line.** Use `eleventyConfig.on("eleventy.after", ...)` to add a one-line status to Eleventy's own output so it sits alongside `Wrote 25 files`.
-  - **Pre-deploy / CI gate.** If deploying through CI, fail the build (or post a PR comment) when empty categories appear unexpectedly. Useful once a deploy pipeline exists.
-  - **Sidebar banner on `/contact/` or a hidden `/build-report/` page.** A page on the site itself listing build-time warnings — visible only when accessed directly. Heavier than the console option.
-
-  Recommended next step: start with the console warning hook (smallest change, no new pages). Revisit a build-report page once there are more build-time signals worth showing (broken links, missing alt text, etc.).
+- [x] **Surface the empty-category report during build** — done in two places:
+  - **CI (PRs):** the `build` job in `.github/workflows/deploy.yml` writes a build report to `$GITHUB_STEP_SUMMARY` and posts a sticky PR comment via `marocchino/sticky-pull-request-comment@v2`. Includes page/photo counts and an empty-category warning with the affected paths.
+  - **Local builds:** `.eleventy.js` hooks `eleventy.after` to print a `[gallery] ⚠️` warning to stderr after each build when empty categories exist. Silent on clean builds.
 
 ## Content ported
 
@@ -154,4 +150,4 @@ Deferred curation passes — do these before publishing.
 - [ ] **Production cutover plan** — when ready to replace canvasman.com itself, decisions needed: keep GitHub Pages or move to Cloudflare Pages / Netlify, what's the cutover window, do we keep the legacy server running in parallel for a grace period?
 - [ ] **Contact form** — currently mailto-only. Decide whether to add a real form (Formspree, Basin, etc. — needs free account + tiny JS) or stay with mailto + tel.
 - [ ] **SEO & 301 redirects** — old Joomla site has ~7,000 URL aliases in `jos_sh404sef_aliases`. If/when canvasman.com is replaced, we should preserve the most-trafficked old URLs with 301s to the new equivalents. Probably only the top 20–50 URLs matter; the rest can `410 Gone`.
-- [ ] Upgrade site to SSL
+- [x] **HTTPS / SSL on preview.canvasman.com** — Let's Encrypt certificate auto-provisioned by GitHub Pages once the CNAME record resolved. "Enforce HTTPS" enabled in repo Settings → Pages so HTTP requests redirect to HTTPS.

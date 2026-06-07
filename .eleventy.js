@@ -47,6 +47,34 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.setDataDeepMerge(true);
 
+  // After every build, surface any empty gallery categories.
+  //
+  // src/_data/gallery.js writes archive/EMPTY_CATEGORIES.md on each build
+  // (single source of truth). The CI workflow already includes that file's
+  // contents in the PR build report; this hook does the same for local
+  // `npm run build` so dev environments aren't silent about it.
+  //
+  // Silent on clean builds — only prints when there's something to fix.
+  eleventyConfig.on("eleventy.after", () => {
+    const reportFile = path.join(__dirname, "archive", "EMPTY_CATEGORIES.md");
+    if (!fs.existsSync(reportFile)) return;
+    const content = fs.readFileSync(reportFile, "utf8");
+    const countMatch = content.match(/^## Currently empty: (\d+)/m);
+    if (!countMatch) return;
+    const count = parseInt(countMatch[1], 10);
+    if (count === 0) return;
+
+    const paths = [];
+    for (const line of content.split("\n")) {
+      const m = line.match(/^\| `(src\/images\/gallery\/[^`]+)`/);
+      if (m) paths.push(m[1]);
+    }
+    const noun = count === 1 ? "category" : "categories";
+    console.warn(`\n[gallery] ⚠️  ${count} empty gallery ${noun}:`);
+    for (const p of paths) console.warn(`[gallery]    ${p}`);
+    console.warn(`[gallery] See archive/EMPTY_CATEGORIES.md for restore/cleanup steps.\n`);
+  });
+
   return {
     dir: {
       input: "src",
