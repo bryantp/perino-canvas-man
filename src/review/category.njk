@@ -1,0 +1,64 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: gallery.categories
+  size: 1
+  alias: cat
+permalink: "/review/{{ cat.area }}/{{ cat.slug }}/"
+eleventyExcludeFromCollections: true
+eleventyComputed:
+  title: "Review · {{ cat.areaTitle }} · {{ cat.title }}"
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow"><a href="/review/">All categories</a> &nbsp;·&nbsp; <a href="/{{ cat.area }}/">View live: {{ cat.areaTitle }}</a></p>
+    <h1>{{ cat.areaTitle }} &raquo; {{ cat.title }}</h1>
+    <p class="lede">{{ cat.imageCount }} photo{% if cat.imageCount != 1 %}s{% endif %}. Click a photo to toggle the "cut" mark. Selections persist across pages.</p>
+  </div>
+</section>
+
+<section class="review-grid-section">
+  <div class="container">
+    <ul class="review-grid">
+      {% for img in cat.images %}
+        <li>
+          <button
+            type="button"
+            class="review-item"
+            data-photo-path="src/images/gallery/{{ cat.area }}/{{ cat.slug }}/{{ img.file }}"
+            data-area="{{ cat.area }}"
+            data-category="{{ cat.slug }}"
+            data-filename="{{ img.file }}"
+            aria-pressed="false"
+          >
+            {% responsiveImage img.src, img.file, "(min-width: 1200px) 20vw, (min-width: 700px) 33vw, 50vw" %}
+            <span class="cut-badge" aria-hidden="true">✕ cut</span>
+            <span class="review-filename" aria-hidden="true">{{ img.file }}</span>
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{# Inter-category nav: prev / next #}
+{% set catIndex = -1 %}
+{% for c in gallery.categories %}
+  {% if c.area == cat.area and c.slug == cat.slug %}{% set catIndex = loop.index0 %}{% endif %}
+{% endfor %}
+{% set prevCat = gallery.categories[catIndex - 1] if catIndex > 0 else null %}
+{% set nextCat = gallery.categories[catIndex + 1] if catIndex + 1 < gallery.categories.length else null %}
+
+<section class="page-body" style="padding-top:0;">
+  <div class="container" style="display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+    {% if prevCat %}
+      <a class="button button-outline" style="color:var(--color-navy); border-color:var(--color-navy);"
+         href="/review/{{ prevCat.area }}/{{ prevCat.slug }}/">&larr; {{ prevCat.areaTitle }} · {{ prevCat.title }}</a>
+    {% else %}<span></span>{% endif %}
+    {% if nextCat %}
+      <a class="button"
+         href="/review/{{ nextCat.area }}/{{ nextCat.slug }}/">{{ nextCat.areaTitle }} · {{ nextCat.title }} &rarr;</a>
+    {% endif %}
+  </div>
+</section>

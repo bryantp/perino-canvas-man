@@ -330,6 +330,104 @@ p { margin: 0 0 1em; }
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* ===== Contact-sheet review (dev-only) ===== */
+.review-grid-section { padding: 2rem 0 5rem; }
+.review-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.review-grid li { margin: 0; }
+.review-item {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 3px solid transparent;
+  border-radius: var(--radius);
+  background: var(--color-border);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.1s ease;
+}
+.review-item:hover { border-color: var(--color-rope); }
+.review-item img, .review-item picture {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: opacity 0.15s ease;
+}
+.review-item .cut-badge {
+  position: absolute;
+  top: 0.5rem; right: 0.5rem;
+  background: #c0392b;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  pointer-events: none;
+}
+.review-item .review-filename {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.7rem;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  pointer-events: none;
+}
+.review-item:hover .review-filename { opacity: 1; }
+.review-item.cut {
+  border-color: #c0392b;
+}
+.review-item.cut img, .review-item.cut picture {
+  opacity: 0.35;
+}
+.review-item.cut .cut-badge { opacity: 1; }
+
+.review-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--color-navy-dark);
+  color: white;
+  padding: 0.75rem 0;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.3);
+  z-index: 80;
+}
+.review-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.review-bar-count {
+  color: var(--color-cream);
+  font-weight: 500;
+}
+.review-bar-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.review-bar-actions .button { padding: 0.5rem 1rem; font-size: 0.9rem; }
+.review-bar-actions .button-outline { color: var(--color-cream); border-color: var(--color-cream); }
+.review-bar-actions .button-outline:hover { background: var(--color-cream); color: var(--color-navy-dark); }
+.review-bar-actions .button:disabled { opacity: 0.4; cursor: not-allowed; }
+
 /* ===== FAQ ===== */
 .faq-list { margin: 2rem 0; max-width: 80ch; }
 .faq-item {

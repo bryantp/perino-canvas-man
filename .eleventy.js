@@ -8,6 +8,13 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/images/gallery": "images/gallery" });
   eleventyConfig.addPassthroughCopy({ "src/CNAME": "CNAME" });
 
+  // Local-only contact-sheet review tool. Only built when REVIEW_MODE=1 is set
+  // (see `npm run review`). Production deploys never set this env var, so the
+  // /review/ pages are not present in any published artifact.
+  if (process.env.REVIEW_MODE !== "1") {
+    eleventyConfig.ignores.add("./src/review/");
+  }
+
   eleventyConfig.addWatchTarget("src/images/gallery");
   eleventyConfig.addWatchTarget("src/assets");
 
