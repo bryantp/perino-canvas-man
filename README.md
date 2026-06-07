@@ -38,4 +38,10 @@ src/
 └── *.md, *.njk    # pages
 ```
 
-See `CANVAS_MAN_PLAN.md` for the full conversion plan and open questions.
+## Operations
+
+- **Deploys** run automatically on every push to `main` via `.github/workflows/deploy.yml` and publish to `https://preview.canvasman.com/` (GitHub Pages, custom domain).
+- **Branch protection:** `main` is protected by the `main_protect` ruleset — every change requires a PR with a passing `build` check and a code-owner review.
+- **Uptime monitoring:** [UptimeRobot](https://uptimerobot.com) pings the site every 5 minutes from multiple regions and emails on downtime. Deliberately external to GitHub so it survives a GitHub outage. Dashboard + settings live in the UptimeRobot account, not in this repo.
+
+See `CANVAS_MAN_PLAN.md` for the full conversion plan, deferred curation passes, and open questions.
