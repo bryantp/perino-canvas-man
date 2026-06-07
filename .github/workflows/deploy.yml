@@ -99,6 +99,15 @@ jobs:
         with:
           path: _site
 
+      - name: Upload empty-categories report
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: empty-categories-report
+          path: archive/EMPTY_CATEGORIES.md
+          if-no-files-found: warn
+          retention-days: 1
+
   comment:
     needs: build
     if: github.event_name == 'pull_request'
@@ -121,3 +130,74 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  update-status:
+    # Sync the README "Current build state" section with the live empty-categories
+    # list. Runs only on push-to-main; pushes back to main using a PAT because
+    # the github-actions bot can't bypass the main_protect ruleset on this repo
+    # (personal repos don't allow Integration actors in bypass_actors).
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout (with PAT for push-back)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.WORKFLOW_PUSH_TOKEN }}
+
+      - name: Download empty-categories report
+        uses: actions/download-artifact@v4
+        with:
+          name: empty-categories-report
+          path: archive/
+
+      - name: Rewrite README section between markers
+        run: |
+          python3 - <<'PY'
+          import re, pathlib
+
+          empty = []
+          src = pathlib.Path("archive/EMPTY_CATEGORIES.md")
+          if src.exists():
+              for line in src.read_text().splitlines():
+                  m = re.match(r"^\| `(src/images/gallery/[^`]+)`", line)
+                  if m:
+                      empty.append(m.group(1))
+
+          if empty:
+              noun = "category" if len(empty) == 1 else "categories"
+              inner = f"⚠️ **{len(empty)} empty gallery {noun}:**\n\n"
+              for p in empty:
+                  inner += f"- `{p}`\n"
+              inner += "\nSee [`archive/EMPTY_CATEGORIES.md`](archive/EMPTY_CATEGORIES.md) for restore/cleanup steps."
+          else:
+              inner = "✅ All gallery categories have at least one photo."
+
+          readme_path = pathlib.Path("README.md")
+          readme = readme_path.read_text()
+          new_section = f"<!-- empty-cats:start -->\n{inner}\n<!-- empty-cats:end -->"
+          updated = re.sub(
+              r"<!-- empty-cats:start -->.*?<!-- empty-cats:end -->",
+              new_section,
+              readme,
+              count=1,
+              flags=re.DOTALL,
+          )
+          if updated == readme:
+              print("README markers unchanged (or missing).")
+          readme_path.write_text(updated)
+          PY
+
+      - name: Commit if README or EMPTY_CATEGORIES.md changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md archive/EMPTY_CATEGORIES.md
+          if git diff --cached --quiet; then
+            echo "No status changes to commit."
+            exit 0
+          fi
+          git commit -m "Sync README empty-cats section [skip ci]"
+          git push
