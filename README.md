@@ -1,6 +1,22 @@
-# Perino's CanvasMan — Website
+# Perino's Canvas & Awnings — Website
+
+[![Build](https://github.com/bryantp/perino-canvas-man/actions/workflows/deploy.yml/badge.svg)](https://github.com/bryantp/perino-canvas-man/actions/workflows/deploy.yml)
+[![Site status](https://img.shields.io/uptimerobot/status/m803243866-7acd2181deed5fd179b43b6b?label=preview.canvasman.com)](https://preview.canvasman.com)
+[![Uptime (30d)](https://img.shields.io/uptimerobot/ratio/30/m803243866-7acd2181deed5fd179b43b6b?label=uptime%20%2830d%29)](https://preview.canvasman.com)
 
 Static website built with [Eleventy](https://www.11ty.dev/). Source content lives in Markdown + a single YAML data file; everything compiles to plain HTML that can be hosted on any web server.
+
+## Current build state
+
+<!-- empty-cats:start -->
+⚠️ **1 empty gallery category:**
+
+- `src/images/gallery/commercial/protect-covers/`
+
+See [`archive/EMPTY_CATEGORIES.md`](archive/EMPTY_CATEGORIES.md) for restore/cleanup steps.
+<!-- empty-cats:end -->
+
+_The section above is automatically updated by `.github/workflows/deploy.yml` on every push to `main`. Don't edit it by hand — your edit will be overwritten._
 
 ## Quick start
 
