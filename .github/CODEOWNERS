@@ -1,0 +1,14 @@
+# Code owners for this repo.
+#
+# GitHub reads this file to decide whose review is required on a PR.
+# The `main_protect` ruleset has `require_code_owner_review: true`, so
+# without this file that rule is a no-op. With it, the owners listed
+# below are auto-requested as reviewers on any PR that touches matching
+# paths.
+#
+# Syntax: <path-pattern> <owner1> <owner2> ...
+# Patterns work like .gitignore, but order matters — the LAST matching
+# rule wins. Put broad rules first, narrow rules last.
+
+# Default owner for everything in the repo.
+*   @bryantp
