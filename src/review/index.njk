@@ -1,0 +1,39 @@
+---
+layout: layouts/base.njk
+title: "Contact-sheet review"
+permalink: "/review/"
+eleventyExcludeFromCollections: true
+---
+
+<section class="page-hero">
+  <div class="container">
+    <h1>Contact-sheet review</h1>
+    <p class="lede">Click any photo to mark it for cut. Selections persist across pages in your browser. When you're done, export <code>cuts.json</code> and run <code>npm run apply-cuts</code>.</p>
+    <p style="background:#fff3cd; border-left:4px solid var(--color-rope); padding:0.75rem 1rem; margin-top:1.5rem; border-radius:4px;">
+      <strong>Dev-only.</strong> This page is excluded from production builds. It only appears when you run <code>npm run review</code>.
+    </p>
+  </div>
+</section>
+
+<section class="page-body">
+  <div class="container">
+    <h2>Categories</h2>
+    <ul class="card-grid">
+      {% for cat in gallery.categories %}
+        <li class="card">
+          <a href="/review/{{ cat.area }}/{{ cat.slug }}/">
+            <div class="card-thumb">
+              {% if cat.thumb %}
+                {% responsiveImage cat.thumb, cat.title, "(min-width: 1000px) 33vw, (min-width: 600px) 50vw, 100vw" %}
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <h3>{{ cat.areaTitle }} &raquo; {{ cat.title }}</h3>
+              <p class="count">{{ cat.imageCount }} photo{% if cat.imageCount != 1 %}s{% endif %}</p>
+            </div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

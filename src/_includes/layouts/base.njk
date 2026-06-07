@@ -13,5 +13,8 @@
     <main>{{ content | safe }}</main>
     {% include "partials/footer.njk" %}
     <script src="/assets/js/lightbox.js" defer></script>
+    {% if page.url and page.url.startsWith("/review/") %}
+      <script src="/assets/js/review.js" defer></script>
+    {% endif %}
   </body>
 </html>

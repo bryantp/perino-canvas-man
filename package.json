@@ -6,6 +6,8 @@
   "scripts": {
     "build": "eleventy",
     "serve": "eleventy --serve",
+    "review": "REVIEW_MODE=1 eleventy --serve --port 8081",
+    "apply-cuts": "node tools/apply-cuts.js",
     "clean": "rm -rf _site"
   },
   "devDependencies": {

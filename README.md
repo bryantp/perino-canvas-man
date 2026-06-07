@@ -50,6 +50,21 @@ src/
 └── *.md, *.njk    # pages
 ```
 
+## Curating gallery photos
+
+To weed out weak or duplicate photos:
+
+```sh
+npm run review                    # opens dev server at http://localhost:8081/review/
+# click any photo to mark it for "cut" (selections persist across pages)
+# when done, click "Export cuts.json" at the bottom
+npm run apply-cuts -- ~/Downloads/cuts.json
+```
+
+`apply-cuts` moves the marked files from `src/images/gallery/<area>/<cat>/` to `archive/manual-curated/<area>/<cat>/`, never deletes them, and appends a dated entry to `archive/ARCHIVE_LOG.md`. To restore one, `mv` it back into `src/images/gallery/`.
+
+The `/review/` pages only exist when you run `npm run review` (gated by the `REVIEW_MODE` env var) — they're not shipped to production.
+
 ## Operations
 
 - **Deploys** run automatically on every push to `main` via `.github/workflows/deploy.yml` and publish to `https://preview.canvasman.com/` (GitHub Pages, custom domain).
