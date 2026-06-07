@@ -1,6 +1,12 @@
 const path = require("node:path");
 const fs = require("node:fs");
+const yaml = require("js-yaml");
 const Image = require("@11ty/eleventy-img");
+
+// Read site.yml once at config-load time so we can use the canonical URL
+// in the sitemap generator without duplicating it.
+const siteData = yaml.load(fs.readFileSync("src/_data/site.yml", "utf8"));
+const SITE_URL = siteData.url.replace(/\/+$/, "");
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
@@ -80,6 +86,41 @@ module.exports = function (eleventyConfig) {
     console.warn(`\n[gallery] ⚠️  ${count} empty gallery ${noun}:`);
     for (const p of paths) console.warn(`[gallery]    ${p}`);
     console.warn(`[gallery] See archive/EMPTY_CATEGORIES.md for restore/cleanup steps.\n`);
+  });
+
+  // Sitemap generator.
+  //
+  // Runs after Eleventy has written all pages to disk. Walks the output
+  // directory for index.html files (Eleventy's convention for clean URLs),
+  // builds the URL list, and emits sitemap.xml at the output root.
+  //
+  // Chosen over the standard sitemap plugin because that plugin tries to
+  // access paginated pages' templateContent during render and is incompatible
+  // with Eleventy 3.x. Reading the actual emitted files is more robust — it
+  // works regardless of how Eleventy generated them (paginated, standalone,
+  // future template patterns we haven't thought of).
+  //
+  // Lastmod is the build timestamp. Per-page git-based dates would be more
+  // accurate but require running git per file; not worth the complexity for a
+  // sitemap that's just a hint to crawlers.
+  eleventyConfig.on("eleventy.after", ({ dir }) => {
+    const outDir = dir.output;
+    const urls = [];
+    (function walk(d, rel) {
+      for (const entry of fs.readdirSync(d, { withFileTypes: true })) {
+        const full = path.join(d, entry.name);
+        if (entry.isDirectory()) walk(full, rel + "/" + entry.name);
+        else if (entry.name === "index.html") urls.push(rel + "/");
+      }
+    })(outDir, "");
+    urls.sort();
+
+    const lastmod = new Date().toISOString();
+    const body = urls
+      .map((u) => `  <url><loc>${SITE_URL}${u}</loc><lastmod>${lastmod}</lastmod></url>`)
+      .join("\n");
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
+    fs.writeFileSync(path.join(outDir, "sitemap.xml"), xml);
   });
 
   return {
