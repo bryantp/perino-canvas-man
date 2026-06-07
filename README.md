@@ -9,11 +9,7 @@ Static website built with [Eleventy](https://www.11ty.dev/). Source content live
 ## Current build state
 
 <!-- empty-cats:start -->
-⚠️ **1 empty gallery category:**
-
-- `src/images/gallery/commercial/protect-covers/`
-
-See [`archive/EMPTY_CATEGORIES.md`](archive/EMPTY_CATEGORIES.md) for restore/cleanup steps.
+✅ All gallery categories have at least one photo.
 <!-- empty-cats:end -->
 
 _The section above is automatically updated by `.github/workflows/deploy.yml` on every push to `main`. Don't edit it by hand — your edit will be overwritten._
