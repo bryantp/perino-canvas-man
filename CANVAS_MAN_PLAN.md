@@ -140,7 +140,7 @@ Deferred curation passes — do these before publishing.
 - [x] **FAQ** — all 19 Q&A entries from `canvasman.com/faq` ported into `src/_data/faq.yml` and rendered at `/faq/` as a no-JS `<details>` accordion. Includes the full 36-row stain-removal table.
 - [x] **About page** — pulls real founding year (1972) and region ("Long Island") from `site.yml`.
 - [x] **Canvas Services page** — ported from `canvasman.com/canvas-services.html`. Four sections: intro, Marine Canvas Repairs, Canvas Awning Repairs, Canvas Awning Service. Legacy anchors (`#marine-canvas-repairs`, `#marine-awning-repairs`, `#canvas-awning-services`) preserved so deep links from the old site still work. The intro CTA was rewritten to pull the phone number from `site.yml` (replacing the outdated "Give Mike or Tom" text).
-- [ ] **Q1 FAQ wording** — answer says "from Canvas Man" verbatim (matches live source). Decide whether to keep "Canvas Man" as a brand reference or substitute the formal name "Perino's Canvas & Awnings". Easy `sed` either way.
+- [x] **FAQ brand-name normalization** — replaced "Canvas Man" with "Perino's" in two FAQ answers (Q1 and Q3) so the wording matches the current display name. Kept the brand as colloquial "Perino's" rather than the formal "Perino's Canvas & Awnings" since it reads naturally mid-sentence.
 
 ## Deployment
 
