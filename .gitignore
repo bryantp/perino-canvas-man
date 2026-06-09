@@ -11,3 +11,6 @@ build/
 site_files/joomla_files.tar.gz
 site_files/joomla_db.sql
 cuts.json
+
+# Private working notes (migration plans, infra details, audit findings)
+notes/
